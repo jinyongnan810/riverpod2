@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '',
+      title: 'Example 2: StateNotifierProvider',
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData.dark(),
       home: const HomePage(),
@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+/* Example 1
 final dateTimeProvider = Provider<DateTime>((ref) => DateTime.now());
 
 class HomePage extends ConsumerWidget {
@@ -29,8 +30,41 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final date = ref.watch(dateTimeProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Example 1')),
+      appBar: AppBar(title: const Text('Example 1: Basic Provider')),
       body: Center(child: Text(date.toIso8601String())),
+    );
+  }
+}
+*/
+
+class Counter extends StateNotifier<int> {
+  Counter() : super(0);
+  void increment() {
+    state += 1;
+  }
+}
+
+final counterProvider = StateNotifierProvider<Counter, int>(
+  (ref) => Counter(),
+);
+
+class HomePage extends ConsumerWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Example 2: StateNotifierProvider')),
+      body: Consumer(builder: ((context, ref, child) {
+        final count = ref.watch(counterProvider);
+        return Center(child: Text(count.toString()));
+      })),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.plus_one),
+        onPressed: () {
+          ref.read(counterProvider.notifier).increment();
+        },
+      ),
     );
   }
 }
