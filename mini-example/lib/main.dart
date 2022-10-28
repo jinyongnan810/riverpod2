@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Example 2: StateNotifierProvider',
+      title: 'Example 3: FutureProvider',
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData.dark(),
       home: const HomePage(),
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/* Example 1
+/* Example 1: Simple Provider
 final dateTimeProvider = Provider<DateTime>((ref) => DateTime.now());
 
 class HomePage extends ConsumerWidget {
@@ -37,6 +37,7 @@ class HomePage extends ConsumerWidget {
 }
 */
 
+/* Example 2: StateNotifier & StateNotifierProvider
 class Counter extends StateNotifier<int> {
   Counter() : super(0);
   void increment() {
@@ -66,5 +67,75 @@ class HomePage extends ConsumerWidget {
         },
       ),
     );
+  }
+}
+*/
+
+enum City {
+  beijing,
+  tokyo,
+  paris,
+}
+
+typedef WeatherEmoji = String;
+const weather = {
+  City.beijing: '🌨️',
+  City.tokyo: '🌤️',
+  City.paris: '🌞',
+};
+const unknown = '🤔';
+
+Future<WeatherEmoji> getWeather(City city) async {
+  await Future<void>.delayed(const Duration(seconds: 1));
+  return weather[city]!;
+}
+
+final cityProvider = StateProvider<City?>((ref) => null);
+
+final weatherProvider = FutureProvider<WeatherEmoji>(((ref) {
+  final city = ref.watch(cityProvider);
+  if (city == null) return unknown;
+  return getWeather(city);
+}));
+
+class HomePage extends ConsumerWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final city = ref.watch(cityProvider);
+    final currentWeather = ref.watch(weatherProvider);
+    return Scaffold(
+        appBar: AppBar(title: const Text('Example 3: FutureProvider')),
+        body: Column(
+          children: [
+            currentWeather.when(
+              data: (String data) {
+                return Text('The weather is $data');
+              },
+              error: (Object error, StackTrace stackTrace) {
+                return const Text('Fetching weather failed');
+              },
+              loading: () {
+                return const CircularProgressIndicator();
+              },
+            ),
+            Expanded(
+                child: ListView.builder(
+              itemBuilder: ((context, index) {
+                final currentCity = City.values[index];
+                final isSelected = currentCity == city;
+                return ListTile(
+                  title: Text(currentCity.toString()),
+                  onTap: () {
+                    ref.read(cityProvider.notifier).state = currentCity;
+                  },
+                  trailing: isSelected ? const Icon(Icons.check) : null,
+                );
+              }),
+              itemCount: City.values.length,
+            ))
+          ],
+        ));
   }
 }
