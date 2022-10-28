@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Example 3: FutureProvider',
+      title: 'Example 4: StreamProvider',
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData.dark(),
       home: const HomePage(),
@@ -71,6 +71,7 @@ class HomePage extends ConsumerWidget {
 }
 */
 
+/* Example 3: FutureProvider
 enum City {
   beijing,
   tokyo,
@@ -136,6 +137,54 @@ class HomePage extends ConsumerWidget {
               itemCount: City.values.length,
             ))
           ],
+        ));
+  }
+}
+*/
+
+final names = [
+  'Alice',
+  'Bob',
+  'Charlie',
+  'Dean',
+  'Eva',
+  'Fred',
+  'Gates',
+  'Henry',
+  'Issac',
+];
+final tickerProvider = StreamProvider<int>(((ref) {
+  return Stream.periodic(const Duration(seconds: 1), (i) => i + 1);
+}));
+final namesProvider = StreamProvider<List<String>>(((ref) {
+  final ticker = ref.watch(tickerProvider.stream);
+  return ticker.map((count) => names.getRange(0, count).toList());
+}));
+
+class HomePage extends ConsumerWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+        appBar: AppBar(title: const Text('Example 4: StreamProvider')),
+        body: Consumer(
+          builder: (context, ref, child) {
+            final names = ref.watch(namesProvider);
+            return names.when(
+                data: (data) => ListView.builder(
+                      itemBuilder: ((context, index) {
+                        return ListTile(
+                          title: Text(data[index]),
+                        );
+                      }),
+                      itemCount: data.length,
+                    ),
+                error: ((error, stackTrace) {
+                  return Text('Error: $error');
+                }),
+                loading: () => const CircularProgressIndicator());
+          },
         ));
   }
 }
