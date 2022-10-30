@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Example 4: StreamProvider',
+      title: 'Example 5: Create User',
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData.dark(),
       home: const HomePage(),
@@ -142,6 +143,7 @@ class HomePage extends ConsumerWidget {
 }
 */
 
+/* Example 4: StreamProvider
 final names = [
   'Alice',
   'Bob',
@@ -186,5 +188,40 @@ class HomePage extends ConsumerWidget {
                 loading: () => const CircularProgressIndicator());
           },
         ));
+  }
+}
+*/
+
+class Person {
+  final String id;
+  final String name;
+  final int age;
+
+  Person({required this.name, required this.age, String? uuid})
+      : id = uuid ?? const Uuid().v4();
+  Person updated([String? name, int? age]) => Person(
+        name: name ?? this.name,
+        age: age ?? this.age,
+        uuid: id,
+      );
+  String get displayName {
+    return '$name ($age years old)';
+  }
+
+  @override
+  bool operator ==(covariant Person other) => id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
+}
+
+class HomePage extends ConsumerWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Example 5: Create User')),
+    );
   }
 }
