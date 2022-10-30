@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:uuid/uuid.dart';
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'Example 5: Create User',
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData.dark(),
-      home: const HomePage(),
+      home: HomePage(),
     );
   }
 }
@@ -215,13 +217,105 @@ class Person {
   int get hashCode => id.hashCode;
 }
 
-class HomePage extends ConsumerWidget {
-  const HomePage({super.key});
+class DataModel extends ChangeNotifier {
+  final List<Person> _people = [];
+  int get count => _people.length;
+  UnmodifiableListView<Person> get people => UnmodifiableListView(_people);
+  void add(Person person) {
+    _people.add(person);
+    notifyListeners();
+  }
+
+  void update(Person person) {
+    final index = _people.indexOf(person);
+    _people[index] = person;
+    notifyListeners();
+  }
+}
+
+final peopleProvider = ChangeNotifierProvider((_) => DataModel());
+
+class HomePage extends ConsumerStatefulWidget {
+  HomePage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends ConsumerState<HomePage> {
+  final nameController = TextEditingController();
+  final ageController = TextEditingController();
+  @override
+  void dispose() {
+    nameController.dispose();
+    ageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final people = ref.watch(peopleProvider);
     return Scaffold(
       appBar: AppBar(title: const Text('Example 5: Create User')),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.plus_one),
+        onPressed: () async {
+          final person = showUpdateUserDialog(context,
+              nameController: nameController, ageController: ageController);
+          if (person != null) {
+            // peopleProvider.
+          }
+        },
+      ),
+    );
+  }
+
+  Future<Person?> showUpdateUserDialog(BuildContext context,
+      {required TextEditingController nameController,
+      required TextEditingController ageController,
+      Person? person}) {
+    String? name = person?.name;
+    int? age = person?.age;
+    nameController.text = name ?? '';
+    ageController.text = age?.toString() ?? '';
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(person == null ? 'Create a user' : 'Update a user'),
+          content: Column(mainAxisSize: MainAxisSize.min, children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(label: Text('User Name')),
+              onChanged: (value) => name = value,
+            ),
+            TextField(
+              controller: ageController,
+              decoration: const InputDecoration(label: Text('User Age')),
+              onChanged: (value) => age = int.tryParse(value),
+            )
+          ]),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context, null);
+                },
+                child: const Text('Cancel')),
+            TextButton(
+                onPressed: () {
+                  print('Saving id:${person?.id}, name:$name, age:$age');
+                  if (name != null && age != null) {
+                    if (person == null) {
+                      Navigator.pop(context, Person(name: name!, age: age!));
+                    } else {
+                      Navigator.pop(context, person.updated(name, age));
+                    }
+                  }
+                },
+                child: const Text('Save')),
+          ],
+        );
+      },
     );
   }
 }
