@@ -194,6 +194,7 @@ class HomePage extends ConsumerWidget {
 }
 */
 
+/* Example 5: ChangeNotifier & ChangeNotifierProvider
 class Person {
   final String id;
   final String name;
@@ -338,6 +339,140 @@ class _HomePageState extends ConsumerState<HomePage> {
                 },
                 child: const Text('Save')),
           ],
+        );
+      },
+    );
+  }
+}
+*/
+
+class Film {
+  final String id;
+  final String title;
+  final String description;
+  bool isFavorite = false;
+  Film(this.id, this.title, this.description);
+}
+
+final films = [
+  Film('A-1', 'Star Wars I', 'Description for Star Wars I'),
+  Film('A-2', 'Star Wars II', 'Description for Star Wars II'),
+  Film('A-3', 'Star Wars III', 'Description for Star Wars III'),
+  Film('A-4', 'Star Wars IV', 'Description for Star Wars IV'),
+];
+
+class FilmNotifier extends StateNotifier<List<Film>> {
+  FilmNotifier() : super(films);
+  void setFavorite(String id, bool isFavorite) {
+    state = state.map((film) {
+      if (film.id == id) {
+        film.isFavorite = isFavorite;
+        return film;
+      } else {
+        return film;
+      }
+    }).toList();
+  }
+}
+
+enum FavoriteStatus {
+  all,
+  favorite,
+  notFavorite,
+}
+
+final favoriteStatusProvider =
+    StateProvider<FavoriteStatus>((_) => FavoriteStatus.all);
+
+final allFilmsProvider =
+    StateNotifierProvider<FilmNotifier, List<Film>>((_) => FilmNotifier());
+
+final favoriteFilmsProvider = Provider<List<Film>>((ref) {
+  final allFilms = ref.watch(allFilmsProvider);
+  return allFilms.where((film) => film.isFavorite).toList();
+});
+
+final notFavoriteFilmsProvider = Provider<List<Film>>((ref) {
+  final allFilms = ref.watch(allFilmsProvider);
+  return allFilms.where((film) => !film.isFavorite).toList();
+});
+
+class HomePage extends ConsumerWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Example 6: StateNotifierProvider')),
+      body: Column(
+        children: [
+          const FilterWidget(),
+          Expanded(
+            child: Consumer(builder: ((context, ref, child) {
+              final favoriteStatus = ref.watch(favoriteStatusProvider);
+              switch (favoriteStatus) {
+                case FavoriteStatus.all:
+                  return FilmsWidget(provider: allFilmsProvider);
+                case FavoriteStatus.favorite:
+                  return FilmsWidget(provider: favoriteFilmsProvider);
+                case FavoriteStatus.notFavorite:
+                  return FilmsWidget(provider: notFavoriteFilmsProvider);
+              }
+            })),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class FilmsWidget extends ConsumerWidget {
+  final AlwaysAliveProviderBase<List<Film>> provider;
+  const FilmsWidget({super.key, required this.provider});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final films = ref.watch(provider);
+    return ListView.builder(
+        itemCount: films.length,
+        itemBuilder: ((context, index) {
+          final film = films[index];
+          return ListTile(
+            title: Text(film.title),
+            subtitle: Text(film.description),
+            trailing: IconButton(
+              icon: Icon(
+                  film.isFavorite ? Icons.favorite : Icons.favorite_border),
+              onPressed: () {
+                ref
+                    .read(allFilmsProvider.notifier)
+                    .setFavorite(film.id, !film.isFavorite);
+              },
+            ),
+          );
+        }));
+  }
+}
+
+class FilterWidget extends StatelessWidget {
+  const FilterWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, child) {
+        final filter = ref.watch(favoriteStatusProvider);
+        return DropdownButton(
+          value: filter,
+          items: FavoriteStatus.values
+              .map((e) => DropdownMenuItem(
+                    child: Text(e.name.split('.').last),
+                    value: e,
+                  ))
+              .toList(),
+          onChanged: (value) {
+            ref.read(favoriteStatusProvider.state).state = value!;
+          },
         );
       },
     );
