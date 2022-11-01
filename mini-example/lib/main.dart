@@ -257,13 +257,37 @@ class _HomePageState extends ConsumerState<HomePage> {
     final people = ref.watch(peopleProvider);
     return Scaffold(
       appBar: AppBar(title: const Text('Example 5: Create User')),
+      body: Consumer(
+        builder: (context, ref, child) {
+          final dataModel = ref.watch(peopleProvider);
+          return ListView.builder(
+              itemCount: dataModel.count,
+              itemBuilder: ((context, index) {
+                return ListTile(
+                  title: GestureDetector(
+                      onTap: () async {
+                        final current = dataModel.people[index];
+                        final person = await showUpdateUserDialog(context,
+                            nameController: nameController,
+                            ageController: ageController,
+                            person: current);
+                        if (person != null) {
+                          dataModel.update(person);
+                        }
+                      },
+                      child: Text(dataModel.people[index].displayName)),
+                );
+              }));
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.plus_one),
         onPressed: () async {
-          final person = showUpdateUserDialog(context,
+          final person = await showUpdateUserDialog(context,
               nameController: nameController, ageController: ageController);
           if (person != null) {
-            // peopleProvider.
+            final dataModel = ref.read(peopleProvider);
+            dataModel.add(person);
           }
         },
       ),
