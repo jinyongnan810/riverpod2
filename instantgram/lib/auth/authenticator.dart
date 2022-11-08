@@ -18,6 +18,8 @@ class Authenticator {
   }
 
   Future<AuthResult> loginWithGoogle() async {
+    // for android, we need to set sha-1 & sha-256 to firebase project
+    // https://developers.google.com/android/guides/client-auth
     final googleSignIn = GoogleSignIn(scopes: [Constants.emailScope]);
     final googleAccount = await googleSignIn.signIn();
     if (googleAccount == null) {

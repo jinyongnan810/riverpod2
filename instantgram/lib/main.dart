@@ -1,5 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:instantgram/auth/authenticator.dart';
+
+import 'extensions/log.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -32,6 +35,14 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('instantgram')),
+      body: Center(
+          child: TextButton(
+        child: const Text('Google Login'),
+        onPressed: () async {
+          final result = await Authenticator().loginWithGoogle();
+          result.log();
+        },
+      )),
     );
   }
 }
