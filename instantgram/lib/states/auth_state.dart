@@ -10,7 +10,7 @@ class AuthState {
     required this.isLoading,
     required this.userId,
   });
-  AuthState.unknown()
+  const AuthState.unknown()
       : result = null,
         isLoading = false,
         userId = null;

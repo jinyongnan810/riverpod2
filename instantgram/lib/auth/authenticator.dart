@@ -12,6 +12,8 @@ class Authenticator {
       FirebaseAuth.instance.currentUser?.displayName ?? '';
   String? get email => FirebaseAuth.instance.currentUser?.email;
 
+  const Authenticator();
+
   Future<void> logout() async {
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();
