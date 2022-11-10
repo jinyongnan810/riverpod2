@@ -1,10 +1,12 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:instantgram/auth/authenticator.dart';
+import 'package:instantgram/backend/user_info_firestore.dart';
 import 'package:instantgram/models/auth_result.dart';
 import 'package:instantgram/states/auth_state.dart';
 
 class AuthStateNotifier extends StateNotifier<AuthState> {
   final _authenticator = const Authenticator();
+  final _userInfoFirestore = const UserInfoFirestore();
 
   AuthStateNotifier() : super(const AuthState.unknown()) {
     if (_authenticator.isLoggedIn) {
@@ -26,7 +28,12 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
     final result = await _authenticator.loginWithGoogle();
     final userId = _authenticator.userId;
     if (result == AuthResult.success && userId != null) {
-      // state = AuthState(result: result, isLoading: false, userId: userId);
+      await _userInfoFirestore.saveUserInfo(
+        userId: userId,
+        displayName: _authenticator.displayName,
+        email: _authenticator.email,
+      );
     }
+    state = AuthState(result: result, isLoading: false, userId: userId);
   }
 }
