@@ -1,7 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:instantgram/constants/strings.dart';
+import 'package:instantgram/loading/loading_screen.dart';
 import 'package:instantgram/providers/auth_state_provider.dart';
+import 'package:instantgram/providers/is_loading_provider.dart';
 import 'package:instantgram/providers/is_logged_in_provider.dart';
 
 import 'firebase_options.dart';
@@ -25,7 +28,14 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData.dark(),
       home: Consumer(
-        builder: (context, ref, child) {
+        builder: (ctx, ref, child) {
+          ref.listen(isLoadingProvider, (previous, next) {
+            if (previous != null && next) {
+              LoadingScreen.instance().show(context: ctx, text: stringLoading);
+            } else if (previous == true && next == false) {
+              LoadingScreen.instance().hide();
+            }
+          });
           final isLoggedIn = ref.watch(isLoggedInProvider);
           if (isLoggedIn) {
             return const HomePage();
@@ -69,7 +79,7 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('instantgram')),
       body: Center(child: Consumer(
-        builder: (context, ref, child) {
+        builder: (_, ref, child) {
           return TextButton(
             child: const Text('Google Login'),
             onPressed: () async {
