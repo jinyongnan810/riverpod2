@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:instantgram/components/login_view_signup_links.dart';
 import 'package:instantgram/constants/strings.dart';
 import 'package:instantgram/loading/loading_screen.dart';
 import 'package:instantgram/providers/auth_state_provider.dart';
@@ -78,16 +79,22 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('instantgram')),
-      body: Center(child: Consumer(
-        builder: (_, ref, child) {
-          return TextButton(
-            child: const Text('Google Login'),
-            onPressed: () async {
-              await ref.read(authStateProvider.notifier).loginWithGoogle();
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(child: Consumer(
+            builder: (_, ref, child) {
+              return TextButton(
+                child: const Text('Google Login'),
+                onPressed: () async {
+                  await ref.read(authStateProvider.notifier).loginWithGoogle();
+                },
+              );
             },
-          );
-        },
-      )),
+          )),
+          const LoginViewSignupLinks(),
+        ],
+      ),
     );
   }
 }
