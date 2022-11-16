@@ -32,7 +32,8 @@ class MyApp extends StatelessWidget {
         builder: (ctx, ref, child) {
           ref.listen(isLoadingProvider, (previous, next) {
             if (previous != null && next) {
-              LoadingScreen.instance().show(context: ctx, text: stringLoading);
+              LoadingScreen.instance()
+                  .show(context: ctx, text: Strings.loading);
             } else if (previous == true && next == false) {
               LoadingScreen.instance().hide();
             }
