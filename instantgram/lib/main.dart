@@ -1,12 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:instantgram/components/login_view_signup_links.dart';
 import 'package:instantgram/constants/strings.dart';
 import 'package:instantgram/loading/loading_screen.dart';
 import 'package:instantgram/providers/auth_state_provider.dart';
 import 'package:instantgram/providers/is_loading_provider.dart';
 import 'package:instantgram/providers/is_logged_in_provider.dart';
+import 'package:instantgram/views/login_view.dart';
 
 import 'firebase_options.dart';
 
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
           if (isLoggedIn) {
             return const HomePage();
           }
-          return const LoginPage();
+          return const LoginView();
         },
       ),
     );
@@ -70,32 +70,5 @@ class HomePage extends StatelessWidget {
         body: const Center(
           child: Text('Main Page'),
         ));
-  }
-}
-
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('instantgram')),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(child: Consumer(
-            builder: (_, ref, child) {
-              return TextButton(
-                child: const Text('Google Login'),
-                onPressed: () async {
-                  await ref.read(authStateProvider.notifier).loginWithGoogle();
-                },
-              );
-            },
-          )),
-          const LoginViewSignupLinks(),
-        ],
-      ),
-    );
   }
 }
