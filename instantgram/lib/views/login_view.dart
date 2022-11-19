@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:instantgram/components/divider_with_margin.dart';
 import 'package:instantgram/components/google_button.dart';
 import 'package:instantgram/components/login_view_signup_links.dart';
+import 'package:instantgram/components/lottie_animation_view.dart';
 import 'package:instantgram/constants/app_colors.dart';
 import 'package:instantgram/constants/strings.dart';
 import 'package:instantgram/providers/auth_state_provider.dart';
@@ -49,6 +50,7 @@ class LoginView extends ConsumerWidget {
               loginWithGoogle,
               const DividerWithMargin(),
               const LoginViewSignupLinks(),
+              LottieAnimationView.smallError()
             ],
           ),
         ),
