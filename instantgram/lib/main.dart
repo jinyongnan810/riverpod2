@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:instantgram/components/animation_with_text.dart';
+import 'package:instantgram/components/lottie_animation_view.dart';
 import 'package:instantgram/constants/strings.dart';
 import 'package:instantgram/loading/loading_screen.dart';
 import 'package:instantgram/providers/auth_state_provider.dart';
@@ -67,8 +69,11 @@ class HomePage extends StatelessWidget {
             }))
           ],
         ),
-        body: const Center(
-          child: Text('Main Page'),
+        body: Center(
+          child: AnimationWithText(
+            text: 'No posts found...',
+            animation: LottieAnimationView.dataNotFound(),
+          ),
         ));
   }
 }
