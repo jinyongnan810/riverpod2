@@ -11,4 +11,5 @@ class Strings {
   static const allowCommentsTitle = 'Allow comments';
   static const allowCommentsDescription =
       'By allowing comments, users will be able to comment on your post.';
+  static const noPosts = 'No posts found...';
 }

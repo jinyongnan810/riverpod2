@@ -1,0 +1,34 @@
+import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:instantgram/components/animation_with_text.dart';
+import 'package:instantgram/components/lottie_animation_view.dart';
+import 'package:instantgram/components/post_grid_view.dart';
+import 'package:instantgram/constants/strings.dart';
+import 'package:instantgram/providers/user_posts_provider.dart';
+
+class UserPostsView extends ConsumerWidget {
+  const UserPostsView({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final posts = ref.watch(userPostsProvider);
+    return RefreshIndicator(
+        child: posts.when(data: (posts) {
+          if (posts.isEmpty) {
+            return AnimationWithText(
+              text: Strings.noPosts,
+              animation: LottieAnimationView.dataNotFound(),
+            );
+          }
+          return PostGridView(posts: posts);
+        }, error: (error, stackTrace) {
+          return LottieAnimationView.error();
+        }, loading: () {
+          return LottieAnimationView.loading();
+        }),
+        onRefresh: () async {
+          final _ = ref.refresh(userPostsProvider);
+          await Future.delayed(const Duration(seconds: 1));
+        });
+  }
+}

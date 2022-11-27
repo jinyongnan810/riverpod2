@@ -1,14 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:instantgram/components/animation_with_text.dart';
-import 'package:instantgram/components/lottie_animation_view.dart';
 import 'package:instantgram/constants/strings.dart';
 import 'package:instantgram/loading/loading_screen.dart';
-import 'package:instantgram/providers/auth_state_provider.dart';
 import 'package:instantgram/providers/is_loading_provider.dart';
 import 'package:instantgram/providers/is_logged_in_provider.dart';
 import 'package:instantgram/views/login_view.dart';
+import 'package:instantgram/views/main_view.dart';
 
 import 'firebase_options.dart';
 
@@ -42,38 +40,11 @@ class MyApp extends StatelessWidget {
           });
           final isLoggedIn = ref.watch(isLoggedInProvider);
           if (isLoggedIn) {
-            return const HomePage();
+            return const MainView();
           }
           return const LoginView();
         },
       ),
     );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('instantgram'),
-          actions: [
-            Consumer(builder: ((context, ref, child) {
-              return IconButton(
-                  onPressed: () {
-                    ref.read(authStateProvider.notifier).logout();
-                  },
-                  icon: const Icon(Icons.logout));
-            }))
-          ],
-        ),
-        body: Center(
-          child: AnimationWithText(
-            text: 'No posts found...',
-            animation: LottieAnimationView.dataNotFound(),
-          ),
-        ));
   }
 }
