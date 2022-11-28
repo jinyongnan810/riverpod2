@@ -12,4 +12,8 @@ class Strings {
   static const allowCommentsDescription =
       'By allowing comments, users will be able to comment on your post.';
   static const noPosts = 'No posts found...';
+  static const yes = 'Yes';
+  static const no = 'No';
+  static const logout = 'Log out';
+  static const confirmLogout = 'Are you sure you want to log oug?';
 }
