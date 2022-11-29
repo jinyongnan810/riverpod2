@@ -17,7 +17,7 @@ class UserPostsView extends ConsumerWidget {
           if (posts.isEmpty) {
             return AnimationWithText(
               text: Strings.noPosts,
-              animation: LottieAnimationView.dataNotFound(),
+              animation: LottieAnimationView.empty(),
             );
           }
           return PostGridView(posts: posts);

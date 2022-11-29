@@ -22,6 +22,8 @@ final userPostsProvider = StreamProvider.autoDispose<Iterable<Post>>(
     if (userId != null) {
       FirebaseFirestore.instance
           .collection(FirestoreCollectionName.posts)
+          // need add index in Firestore
+          // https://console.firebase.google.com/u/1/project/instantgram-69930/firestore/indexes
           .orderBy(FirestoreFieldName.createdAt, descending: true)
           .where(FirestoreFieldName.userId, isEqualTo: userId)
           .snapshots()
