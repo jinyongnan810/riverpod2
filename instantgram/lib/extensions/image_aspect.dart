@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 extension ImageAspect on Image {
@@ -13,5 +14,12 @@ extension ImageAspect on Image {
       completer.complete(ratio);
     }));
     return completer.future;
+  }
+}
+
+extension DataImageAspect on Uint8List {
+  Future<double> getAspectRatio() async {
+    final image = Image.memory(this);
+    return image.getAspectRatio();
   }
 }
