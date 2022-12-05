@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:instantgram/constants/thumbnail_settings.dart';
 import 'package:instantgram/enums/file_type.dart';
 import 'package:instantgram/exceptions/could_not_build_thumbnail_exception.dart';
 import 'package:instantgram/extensions/image_aspect.dart';
@@ -22,7 +23,7 @@ final thumbnailProvider =
         final thumbnail = await VideoThumbnail.thumbnailData(
           video: thumbnailRequest.file.path,
           imageFormat: ImageFormat.JPEG,
-          quality: 75,
+          quality: ThumbnailSettings.videoThumbnailQuality,
         );
         if (thumbnail == null) {
           throw const CouldNotBuildThumbnailException();
