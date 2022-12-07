@@ -17,4 +17,5 @@ class Strings {
   static const logout = 'Log out';
   static const confirmLogout = 'Are you sure you want to log oug?';
   static const createNewPost = 'Create new post';
+  static const pleaseDescribeYourPost = 'Please describe your post here';
 }
