@@ -59,5 +59,11 @@
 			</array>
 		</dict>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Authorize to enable picking images.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Authorize to enable recording videos.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Authorize to enable camera usage.</string>
 </dict>
 </plist>
