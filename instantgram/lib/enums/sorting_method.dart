@@ -1,0 +1,4 @@
+enum SortingMethod {
+  fromNewest,
+  fromOldest,
+}

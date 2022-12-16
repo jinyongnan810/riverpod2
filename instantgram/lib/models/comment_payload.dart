@@ -10,7 +10,6 @@ class CommentPayload extends MapView<String, dynamic> {
     required PostId postId,
     required UserId userId,
     required String content,
-    required DateTime createdAt,
   }) : super(
           {
             FirestoreFieldName.userId: userId,
