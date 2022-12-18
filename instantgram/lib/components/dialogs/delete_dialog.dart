@@ -5,7 +5,7 @@ class DeleteDialog extends AlertDialogModel<bool> {
   const DeleteDialog({required String objectToDelete})
       : super(
           title: 'Delete $objectToDelete',
-          message: 'Are you sure you want to delete this $objectToDelete',
+          message: 'Are you sure you want to delete this $objectToDelete?',
           buttons: const {Strings.no: false, Strings.yes: true},
         );
 }
