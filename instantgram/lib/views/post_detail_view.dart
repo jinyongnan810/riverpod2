@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:instantgram/components/likes_count.dart';
 import 'package:instantgram/components/post_basic_info.dart';
 import 'package:instantgram/components/post_media.dart';
 import 'package:instantgram/models/post.dart';
@@ -19,6 +20,8 @@ class PostDetailView extends ConsumerWidget {
           children: [
             PostMedia(post: post),
             PostBasicInfo(post: post),
+            const Divider(),
+            LikesCount(postId: post.postId)
           ],
         ),
       )),
