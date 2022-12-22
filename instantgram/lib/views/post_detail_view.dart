@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:instantgram/components/comments_preview.dart';
 import 'package:instantgram/components/like_button.dart';
 import 'package:instantgram/components/likes_count.dart';
 import 'package:instantgram/components/post_basic_info.dart';
@@ -23,6 +24,7 @@ class PostDetailView extends ConsumerWidget {
             PostBasicInfo(post: post),
             LikeButton(postId: post.postId),
             const Divider(),
+            CommentsPreview(postId: post.postId),
             LikesCount(postId: post.postId)
           ],
         ),
