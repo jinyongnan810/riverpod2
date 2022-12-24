@@ -64,9 +64,9 @@ class UploadNotifier extends StateNotifier<IsLoading> {
     final fileName = const Uuid().v4();
     // get firebase storage ref
     final originalRef = FirebaseStorage.instance
-        .ref('$userId/${fileType.getStorageName()}/$fileName}');
+        .ref('$userId/${fileType.getStorageName()}/$fileName');
     final thumbnailRef = FirebaseStorage.instance
-        .ref('$userId/${StorageCollectionName.thumbnails}/$fileName}');
+        .ref('$userId/${StorageCollectionName.thumbnails}/$fileName');
 
     try {
       // upload files

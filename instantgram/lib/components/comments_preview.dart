@@ -22,20 +22,22 @@ class CommentsPreview extends ConsumerWidget {
     );
     final asyncComments = ref.watch(commentsProvider(commentsRequest));
     return asyncComments.when(
-      data: (comments) => Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: InkWell(
-          highlightColor: Colors.transparent,
-          splashColor: Colors.transparent,
-          onTap: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (ctx) => CommentsView(postId: postId))),
-          child: Column(
-            children: comments
-                .map((comment) => CommentPreviewItem(comment: comment))
-                .toList(),
-          ),
-        ),
-      ),
+      data: (comments) => comments.isEmpty
+          ? const SizedBox.shrink()
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (ctx) => CommentsView(postId: postId))),
+                child: Column(
+                  children: comments
+                      .map((comment) => CommentPreviewItem(comment: comment))
+                      .toList(),
+                ),
+              ),
+            ),
       error: (_, __) => LottieAnimationView.smallError(),
       loading: () => const CircularProgressIndicator(),
     );
