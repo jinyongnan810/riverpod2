@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:instantgram/components/lottie_animation_view.dart';
 import 'package:instantgram/providers/likes_notifier_provider.dart';
@@ -24,7 +25,9 @@ class LikeButton extends ConsumerWidget {
                 .read(likesNotifierProvider.notifier)
                 .likeOrUnlike(postId: postId, userId: userId);
           },
-          icon: Icon(liked ? Icons.thumb_up : Icons.thumb_up_outlined)),
+          icon: liked
+              ? const FaIcon(FontAwesomeIcons.solidHeart)
+              : const FaIcon(FontAwesomeIcons.heart)),
       error: (_, __) => LottieAnimationView.smallError(),
       loading: () => const CircularProgressIndicator(),
     );

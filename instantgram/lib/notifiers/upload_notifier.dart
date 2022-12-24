@@ -93,7 +93,8 @@ class UploadNotifier extends StateNotifier<IsLoading> {
           .collection(FirestoreCollectionName.posts)
           .add(postPayload);
       return true;
-    } catch (_) {
+    } catch (error) {
+      debugPrint('Error uploading post: $error');
       return false;
     } finally {
       isLoading = false;
