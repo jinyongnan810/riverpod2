@@ -21,4 +21,5 @@ class Strings {
   static const pleaseDescribeYourPost = 'Please describe your post here';
   static const comments = 'Comments';
   static const commentHere = 'Comment here.';
+  static const enterSearchTerm = 'Enter search term here...';
 }
