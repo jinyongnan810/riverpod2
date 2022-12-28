@@ -9,21 +9,23 @@ class SearchView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final termController = useTextEditingController();
     final term = useState('');
-    return Column(children: [
-      TextField(
-        controller: termController,
-        onSubmitted: (text) => term.value = text,
-        decoration: InputDecoration(
-            labelText: 'Search here',
-            suffixIcon: IconButton(
-                onPressed: () {
-                  termController.clear();
-                  term.value = '';
-                },
-                icon: const Icon(Icons.clear))),
-        textInputAction: TextInputAction.search,
+    return CustomScrollView(slivers: [
+      SliverToBoxAdapter(
+        child: TextField(
+          controller: termController,
+          onSubmitted: (text) => term.value = text,
+          decoration: InputDecoration(
+              labelText: 'Search here',
+              suffixIcon: IconButton(
+                  onPressed: () {
+                    termController.clear();
+                    term.value = '';
+                  },
+                  icon: const Icon(Icons.clear))),
+          textInputAction: TextInputAction.search,
+        ),
       ),
-      Expanded(child: SearchedPostsGridView(term: term.value))
+      SearchedPostsGridView(term: term.value)
     ]);
   }
 }
