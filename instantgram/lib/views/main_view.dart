@@ -9,6 +9,7 @@ import 'package:instantgram/helpers/pick_image_helper.dart';
 import 'package:instantgram/providers/auth_state_provider.dart';
 import 'package:instantgram/providers/post_settings_notifier_provider.dart';
 import 'package:instantgram/views/new_post_view.dart';
+import 'package:instantgram/views/tabs/all_posts_view.dart';
 import 'package:instantgram/views/tabs/search_view.dart';
 import 'package:instantgram/views/tabs/user_posts_view.dart';
 
@@ -90,7 +91,7 @@ class _MainViewState extends ConsumerState<MainView> {
         body: const TabBarView(children: [
           UserPostsView(),
           SearchView(),
-          UserPostsView(),
+          AllPostsView(),
         ]),
       ),
     );

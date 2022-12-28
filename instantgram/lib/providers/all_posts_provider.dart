@@ -44,3 +44,36 @@ final allPostsSearchedProvider =
     return controller.stream;
   },
 );
+
+final allPostsProvider = StreamProvider.autoDispose<Iterable<Post>>(
+  (ref) {
+    final controller = StreamController<Iterable<Post>>();
+    ref.onDispose(() {
+      controller.close();
+    });
+    controller.onListen = () {
+      controller.sink.add([]);
+    };
+
+    final userId = ref.watch(userIdProvider);
+
+    if (userId != null) {
+      FirebaseFirestore.instance
+          .collection(FirestoreCollectionName.posts)
+          // need add index in Firestore
+          // https://console.firebase.google.com/u/1/project/instantgram-69930/firestore/indexes
+          .orderBy(FirestoreFieldName.createdAt, descending: true)
+          .snapshots()
+          .listen((snapshot) {
+        final docs = snapshot.docs;
+        final posts = docs
+            // not ones that are being written in the moment
+            .where((doc) => !doc.metadata.hasPendingWrites)
+            .map((doc) => Post(postId: doc.id, json: doc.data()));
+        controller.sink.add(posts);
+      });
+    }
+
+    return controller.stream;
+  },
+);
