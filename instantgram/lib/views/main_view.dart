@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:instantgram/components/dialogs/alert_dialog_model.dart';
 import 'package:instantgram/components/dialogs/logout_dialog.dart';
+import 'package:instantgram/components/sheets/pick_file_bottom_sheet.dart';
 import 'package:instantgram/constants/strings.dart';
 import 'package:instantgram/enums/file_type.dart';
 import 'package:instantgram/helpers/pick_image_helper.dart';
@@ -31,44 +31,9 @@ class _MainViewState extends ConsumerState<MainView> {
           actions: [
             IconButton(
                 onPressed: () async {
-                  final pickedFile =
-                      await PickImageHelper.pickVideoFromGallery();
-                  if (pickedFile == null) {
-                    return;
-                  }
-                  final _ = ref.refresh(postSettingsNotifierProvider);
-                  if (!mounted) {
-                    return;
-                  }
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => NewPostView(
-                        fileToUpload: pickedFile,
-                        fileType: FileType.video,
-                      ),
-                    ),
-                  );
-                },
-                icon: const FaIcon(FontAwesomeIcons.film)),
-            IconButton(
-                onPressed: () async {
-                  final pickedFile =
-                      await PickImageHelper.pickImageFromGallery();
-                  if (pickedFile == null) {
-                    return;
-                  }
-                  final _ = ref.refresh(postSettingsNotifierProvider);
-                  if (!mounted) {
-                    return;
-                  }
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => NewPostView(
-                        fileToUpload: pickedFile,
-                        fileType: FileType.image,
-                      ),
-                    ),
-                  );
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (ctx) => const PickFileBottomSheet());
                 },
                 icon: const Icon(Icons.add_a_photo_outlined)),
             IconButton(
